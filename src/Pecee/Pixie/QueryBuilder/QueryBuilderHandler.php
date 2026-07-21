@@ -84,7 +84,7 @@ class QueryBuilderHandler implements IQueryBuilderHandler
      *
      * @throws Exception
      */
-    final public function __construct(Connection $connection = null)
+    final public function __construct(?Connection $connection = null)
     {
         $this->connection = $connection ?? Connection::getStoredConnection();
 
@@ -860,7 +860,7 @@ class QueryBuilderHandler implements IQueryBuilderHandler
      * @throws \Pecee\Pixie\Exceptions\TableNotFoundException
      * @return \PDOStatement
      */
-    public function delete(array $columns = null): \PDOStatement
+    public function delete(?array $columns = null): \PDOStatement
     {
         /* @var $response \PDOStatement */
         $queryObject = $this->getQuery('delete', $columns);
@@ -974,7 +974,7 @@ class QueryBuilderHandler implements IQueryBuilderHandler
      *
      * @return callable|null
      */
-    public function getEvent(string $name, string $table = null): ?callable
+    public function getEvent(string $name, ?string $table = null): ?callable
     {
         return $this->connection->getEventHandler()->getEvent($name, $table);
     }
