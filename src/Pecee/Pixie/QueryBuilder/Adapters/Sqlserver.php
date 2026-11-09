@@ -75,7 +75,7 @@ class Sqlserver extends BaseAdapter
                     $prefix = $statements['aliases'][$table] ?? null;
 
                     if ($prefix !== null) {
-                        $t = sprintf('%s AS %s', $table, strtolower($prefix));
+                        $t = sprintf('%s AS %s', $table, $prefix);
                     } else {
                         $t = sprintf('%s', $table);
                     }

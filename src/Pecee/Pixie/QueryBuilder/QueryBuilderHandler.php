@@ -698,7 +698,7 @@ class QueryBuilderHandler implements IQueryBuilderHandler
             $table = $this->tablePrefix . $table;
         }
 
-        $this->statements['aliases'][$table] = \strtolower($alias);
+        $this->statements['aliases'][$table] = $alias;
 
         return $this;
     }

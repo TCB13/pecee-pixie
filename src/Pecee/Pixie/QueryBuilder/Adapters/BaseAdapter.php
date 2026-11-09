@@ -186,11 +186,23 @@ abstract class BaseAdapter
                 // Get the criteria only query from the nestedCriteria object
                 $queryObject = $nestedCriteria->getQuery('criteriaOnly', true);
 
+                // Skip if the closure didn't add any criteria (empty closure)
+                $sql = $queryObject->getSql();
+                if (trim($sql) === '')
+                {
+                    // Remove the joiner (AND/OR) that was already pushed before the closure check
+                    if ($joiner !== '')
+                    {
+                        array_pop($criteria);
+                    }
+                    continue;
+                }
+
                 // Merge the bindings we get from nestedCriteria object
                 $bindings[] = $queryObject->getBindings();
 
                 // Append the sql we get from the nestedCriteria object
-                $criteria[] = "({$queryObject->getSql()})";
+                $criteria[] = "({$sql})";
 
                 continue;
             }
@@ -358,7 +370,7 @@ abstract class BaseAdapter
     {
         $this->aliasPrefix = $statements['aliases'][$table] ?? null;
         if ($this->aliasPrefix !== null) {
-            return sprintf('%s AS %s', $this->wrapSanitizer($table), $this->wrapSanitizer(strtolower($this->aliasPrefix)));
+            return sprintf('%s AS %s', $this->wrapSanitizer($table), $this->wrapSanitizer($this->aliasPrefix));
         }
 
         return sprintf('%s', $this->wrapSanitizer($table));
@@ -375,7 +387,8 @@ abstract class BaseAdapter
      */
     public function criteriaOnly(array $statements, $bindValues = true): array
     {
-        $sql = $bindings = [];
+        $sql = '';
+        $bindings = [];
         if (isset($statements['criteria']) === false) {
             return compact('sql', 'bindings');
         }
@@ -443,7 +456,7 @@ abstract class BaseAdapter
             $keys[] = $key;
             if ($value instanceof Raw) {
                 $values[] = (string)$value;
-                $bindings[] = $value->getBindings();
+                $bindings = array_merge($bindings, (array)$value->getBindings());  // ✅ FIXED
             } else {
                 $values[] = '?';
                 $bindings[] = $value;
@@ -493,7 +506,7 @@ abstract class BaseAdapter
 
             if ($value instanceof Raw) {
                 $statements[] = $statement . $value;
-                $bindings += $value->getBindings();
+                $bindings = array_merge($bindings, (array)$value->getBindings()); // fixed
             } else {
                 $statements[] = $statement . '?';
                 $bindings[] = $value;
