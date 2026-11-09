@@ -394,7 +394,7 @@ abstract class BaseAdapter
      * @return array
      * @throws Exception
      */
-    public function delete(array $statements, array $columns = null): array
+    public function delete(array $statements, ?array $columns = null): array
     {
         $table = end($statements['tables']);
 

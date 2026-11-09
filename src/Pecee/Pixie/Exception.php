@@ -28,7 +28,7 @@ class Exception extends \Exception
      */
     protected $query;
 
-    final public function __construct(string $message = '', int $code = 0, Throwable $previous = null, QueryObject $query = null)
+    final public function __construct(string $message = '', int $code = 0, ?Throwable $previous = null, ?QueryObject $query = null)
     {
         parent::__construct($message, $code, $previous);
         $this->query = $query;
@@ -45,7 +45,7 @@ class Exception extends \Exception
      * @see https://www.postgresql.org/docs/9.4/static/errcodes-appendix.html
      * @see https://sqlite.org/c3ref/c_abort.html
      */
-    public static function create(\Exception $e, string $adapterName = null, QueryObject $query = null)
+    public static function create(\Exception $e, ?string $adapterName = null, ?QueryObject $query = null)
     {
 
         if ($e instanceof \PDOException) {
