@@ -116,7 +116,7 @@ class Exception extends \Exception
                     }
 
                     switch ($errorSqlState) {
-                        case null;
+                        case null:
                             if ($errorCode === 14) {
                                 return new ConnectionException($errorMsg, 1, $e->getPrevious(), $query);
                             }
